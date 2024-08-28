@@ -22,31 +22,37 @@ jobs:
         run: |
           git clone https://github.com/preti14-m/LZ-infra.git lz-infra
           cd lz-infra
-          git checkout -b update-from-application
 
-      - name: Copy changes to LZ-infra
+          # Check out the branch if it exists, otherwise create it
+          git checkout -b update-from-application || git checkout update-from-application
+
+      - name: Copy workout.txt to LZ-infra
         run: |
-          cp workout.txt lz-infra/
-          cd lz-infra
-          git add .
-          git commit -m "Automated update from application repository"
+          # Only copy if the file doesn't exist in the destination or is different
+          if ! cmp -s workout.txt lz-infra/workout.txt; then
+            cp workout.txt lz-infra/
+          else
+            echo "File 'workout.txt' is already up to date in 'lz-infra'. No need to copy."
+          fi
 
-      - name: Push changes to LZ-infra
+      - name: Commit and push changes
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-           # Add, commit, and push the changes
-            if git diff-index --quiet HEAD --; then
-              echo "No changes to commit."
-            else
-              git add .
-              git commit -m "Automated update from application repository"
-      
-              # Ensure the branch is pushed to the remote repository
-              git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/preti14-m/LZ-infra.git
-              git push origin update-from-application
-            fi
-         
+          cd lz-infra
+
+          # Check if there are changes to commit
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit."
+            exit 0  # Gracefully exit with success if no changes
+          else
+            git add .
+            git commit -m "Automated update from application repository"
+            
+            # Push the changes to the remote branch
+            git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/preti14-m/LZ-infra.git
+            git push origin update-from-application
+          fi
 
       - name: Create Pull Request in LZ-infra
         uses: peter-evans/create-pull-request@v5
