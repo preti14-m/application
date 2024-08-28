@@ -3,7 +3,7 @@ name: Create PR in LZ-infra
 on:
   push:
     branches:
-      - main  # Change to the branch you want to monitor in the application repository
+      - main  # Replace with the branch you want to monitor
 
 jobs:
   create-pr:
@@ -26,13 +26,16 @@ jobs:
 
       - name: Copy changes to LZ-infra
         run: |
-          # Modify this command to select what files or directories to copy
-          chmod 777 workout.txt
-          ls -l
-          cp workout.txt lz-infra/ # Copy everything from application repo to LZ-infra repo
+          rsync -av --exclude='.git' ../application/ ./  # Use rsync to avoid copying .git
           cd lz-infra
           git add .
           git commit -m "Automated update from application repository"
+
+      - name: Push changes to LZ-infra
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/preti14-m/LZ-infra.git
           git push origin update-from-application
 
       - name: Create Pull Request in LZ-infra
@@ -43,4 +46,4 @@ jobs:
           head: update-from-application
           base: main  # Change this to the target branch in LZ-infra
           title: "Automated PR: Updates from application repo"
-          body: "This PR a was automatically created by a GitHub Action in the application repository."
+          body: "This PR was automatically created by a GitHub Action in the application repository."
