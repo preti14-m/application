@@ -35,8 +35,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/preti14-m/LZ-infra.git
-          git push origin update-from-application
+           # Add, commit, and push the changes
+            if git diff-index --quiet HEAD --; then
+              echo "No changes to commit."
+            else
+              git add .
+              git commit -m "Automated update from application repository"
+      
+              # Ensure the branch is pushed to the remote repository
+              git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/preti14-m/LZ-infra.git
+              git push origin update-from-application
+            fi
+         
 
       - name: Create Pull Request in LZ-infra
         uses: peter-evans/create-pull-request@v5
