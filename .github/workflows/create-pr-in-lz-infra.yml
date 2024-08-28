@@ -39,7 +39,7 @@ jobs:
           touch value.txt
           chmod 777 value.txt
           ls -l
-          cp workflow.txt lz-infra/
+          cp value.txt lz-infra/
 
       - name: Debug Changes
         run: |
