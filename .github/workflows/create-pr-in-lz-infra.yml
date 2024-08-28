@@ -1,0 +1,45 @@
+name: Create PR in LZ-infra
+
+on:
+  push:
+    branches:
+      - main  # Change to the branch you want to monitor in the application repository
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout application repo
+        uses: actions/checkout@v3
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Clone LZ-infra repo
+        run: |
+          git clone https://github.com/preti14-m/LZ-infra.git lz-infra
+          cd lz-infra
+          git checkout -b update-from-application
+
+      - name: Copy changes to LZ-infra
+        run: |
+          # Modify this command to select what files or directories to copy
+          echo "Hello world" > test1.txt
+          cp test1.txt ./  # Copy everything from application repo to LZ-infra repo
+          cd lz-infra
+          git add .
+          git commit -m "Automated update from application repository"
+          git push origin update-from-application
+
+      - name: Create Pull Request in LZ-infra
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          repository: preti14-m/LZ-infra
+          head: update-from-application
+          base: main  # Change this to the target branch in LZ-infra
+          title: "Automated PR: Updates from application repo"
+          body: "This PR was automatically created by a GitHub Action in the application repository."
