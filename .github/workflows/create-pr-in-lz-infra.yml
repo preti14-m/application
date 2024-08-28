@@ -29,10 +29,11 @@ jobs:
       - name: Copy workout.txt to LZ-infra
         run: |
           # Only copy if the file doesn't exist in the destination or is different
-          if ! cmp -s workout.txt lz-infra/workout.txt; then
-            cp workout.txt lz-infra/
+          if ! cmp -s value.txt lz-infra/value.txt; then
+            touch value.txt; chmod 777 value.txt
+            cp value.txt lz-infra/
           else
-            echo "File 'workout.txt' is already up to date in 'lz-infra'. No need to copy."
+            echo "File 'value.txt' is already up to date in 'lz-infra'. No need to copy."
           fi
 
       - name: Commit and push changes
