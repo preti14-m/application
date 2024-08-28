@@ -43,4 +43,4 @@ jobs:
           head: update-from-application
           base: main  # Change this to the target branch in LZ-infra
           title: "Automated PR: Updates from application repo"
-          body: "This PR was automatically created by a GitHub Action in the application repository."
+          body: "This PR a was automatically created by a GitHub Action in the application repository."
