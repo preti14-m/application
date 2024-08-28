@@ -53,13 +53,15 @@ jobs:
         run: |
           cd lz-infra
 
+          # Add all changes, including untracked files
+          git add -A
+
           # Check if there are changes to commit
           if git diff-index --quiet HEAD --; then
             echo "No changes to commit."
             exit 0  # Gracefully exit if no changes are detected
           else
             echo "Changes detected, committing..."
-            git add .
             git commit -m "Automated update from application repository"
             
             # Ensure the remote URL is set correctly with the token
