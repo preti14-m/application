@@ -27,7 +27,7 @@ jobs:
       - name: Copy changes to LZ-infra
         run: |
           # Modify this command to select what files or directories to copy
-          create mode 100644 workout.txt
+          chmod 777 workout.txt
           ls -l
           cp workout.txt lz-infra/ # Copy everything from application repo to LZ-infra repo
           cd lz-infra
