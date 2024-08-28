@@ -38,6 +38,7 @@ jobs:
           # Create value.txt if it doesn't exist, and copy it to lz-infra
           touch value.txt
           chmod 777 value.txt
+          ls -l
           cp workflow.txt lz-infra/
 
       - name: Debug Changes
