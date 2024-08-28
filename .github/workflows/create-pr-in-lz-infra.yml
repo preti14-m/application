@@ -3,7 +3,7 @@ name: Create PR in LZ-infra
 on:
   push:
     branches:
-      - main  # Replace with the branch you want to monitor
+      - main  # Monitor this branch in the application repo
 
 jobs:
   create-pr:
@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout application repo
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensure full history is fetched
 
       - name: Set up Git
         run: |
@@ -23,16 +25,27 @@ jobs:
           git clone https://github.com/preti14-m/LZ-infra.git lz-infra
           cd lz-infra
 
-          # Check out the branch if it exists, otherwise create it
-          git checkout -b update-from-application || git checkout update-from-application
+          # Fetch remote branches and check if update-from-application exists
+          git fetch origin
+          if git rev-parse --verify origin/update-from-application; then
+            git checkout update-from-application
+          else
+            git checkout -b update-from-application
+          fi
 
-      - name: Copy workout.txt to LZ-infra
+      - name: Copy value.txt to LZ-infra
         run: |
-          # Only copy if the file doesn't exist in the destination or is different
-            touch value.txt
-            chmod 777 value.txt
-            cp value.txt lz-infra/
-          
+          # Create value.txt if it doesn't exist, and copy it to lz-infra
+          touch value.txt
+          chmod 777 value.txt
+          cp value.txt lz-infra/
+
+      - name: Debug Changes
+        run: |
+          cd lz-infra
+          echo "Checking for changes..."
+          git status
+          git diff
 
       - name: Commit and push changes
         env:
@@ -43,13 +56,16 @@ jobs:
           # Check if there are changes to commit
           if git diff-index --quiet HEAD --; then
             echo "No changes to commit."
-            exit 0  # Gracefully exit with success if no changes
+            exit 0  # Gracefully exit if no changes are detected
           else
+            echo "Changes detected, committing..."
             git add .
             git commit -m "Automated update from application repository"
             
-            # Push the changes to the remote branch
+            # Ensure the remote URL is set correctly with the token
             git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/preti14-m/LZ-infra.git
+            
+            # Push the changes to the remote branch
             git push origin update-from-application
           fi
 
@@ -59,6 +75,6 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           repository: preti14-m/LZ-infra
           head: update-from-application
-          base: main  # Change this to the target branch in LZ-infra
+          base: main  # Target branch in LZ-infra for the PR
           title: "Automated PR: Updates from application repo"
           body: "This PR was automatically created by a GitHub Action in the application repository."
