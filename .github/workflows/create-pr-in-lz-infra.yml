@@ -37,7 +37,8 @@ jobs:
         run: |
           # Create value.txt if it doesn't exist, and copy it to lz-infra
           touch value.txt
-          chmod 777 value.txt
+          chmod 777 value.txt 
+          chmod -rwx lz-infra/
           ls -l
           cp value.txt lz-infra/
           ls -d lz-infra/
