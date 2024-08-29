@@ -32,7 +32,11 @@ jobs:
           else
             git checkout -b update-from-application
           fi
-
+          
+      - name: Set correct permissions for lz-infra
+        run: |
+          chmod -R 755 lz-infra
+          
       - name: Copy value.txt to LZ-infra
         run: |
           # Create value.txt if it doesn't exist, and copy it to lz-infra
