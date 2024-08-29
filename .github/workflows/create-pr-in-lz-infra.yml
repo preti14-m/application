@@ -36,7 +36,7 @@ jobs:
       - name: Set correct permissions for lz-infra
         run: |
           chmod -R 755 lz-infra
-          ls -d lz-infra/
+          ls -l lz-infra/
           
       - name: Copy value.txt to LZ-infra
         run: |
@@ -44,8 +44,6 @@ jobs:
           touch value.txt
           chmod 777 value.txt 
           chmod -rwx lz-infra/
-          ls -d lz-infra/
-          ls -l
           cp value.txt lz-infra/
           ls -d lz-infra/
 
