@@ -1,4 +1,4 @@
-name: Create PR in LZ-infra/ app
+name: Create PR in LZ-infra
 
 on:
   push:
