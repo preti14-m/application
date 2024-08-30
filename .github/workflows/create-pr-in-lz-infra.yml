@@ -3,7 +3,7 @@ name: Create PR in LZ-infra
 on:
   push:
     branches:
-      - main  # Monitor this branch in the application repo
+      - main
 
 jobs:
   create-pr:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout application repo
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Ensure full history is fetched
+          fetch-depth: 0
 
       - name: Generate Branch Name
         id: generate_branch
@@ -42,6 +42,12 @@ jobs:
           cp value.txt lz-infra/
           ls -d lz-infra/
 
+      - name: Configure Git Identity
+        run: |
+          cd lz-infra
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+
       - name: Commit and push changes
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -61,8 +67,8 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GH_TOKEN }}
-          repository: preti14-m/LZ-infra  # Target repository for PR
-          head: ${{ steps.generate_branch.outputs.branch_name }}  # Source branch for PR
-          base: main  # Target branch in LZ-infra for the PR
+          repository: preti14-m/LZ-infra
+          head: ${{ steps.generate_branch.outputs.branch_name }}
+          base: main
           title: "Automated PR: Updates from application repo"
           body: "This PR was automatically created by a GitHub Action in the application repository."
