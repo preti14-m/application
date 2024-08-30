@@ -1,4 +1,4 @@
-name: Create PR in LZ-infra 2
+name: Create PR in LZ-infra 
 
 on:
   push:
@@ -25,12 +25,13 @@ jobs:
           git clone https://github.com/preti14-m/LZ-infra.git lz-infra
           cd lz-infra
 
-          # Fetch remote branches and check if update-from-application exists
+          # Fetch remote branches and create a branch with date
           git fetch origin
-          if git rev-parse --verify origin/update-from-application; then
-            git checkout update-from-application
+          BRANCH_NAME="update-from-application-$(date +'%Y%m%d')"
+          if git rev-parse --verify origin/$BRANCH_NAME; then
+            git checkout $BRANCH_NAME
           else
-            git checkout -b update-from-application
+            git checkout -b $BRANCH_NAME
           fi
           
       - name: Set correct permissions for lz-infra
@@ -74,7 +75,7 @@ jobs:
             git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/preti14-m/LZ-infra.git
             
             # Push the changes to the remote branch
-            git push origin update-from-application
+            git push origin $BRANCH_NAME
           fi
 
       - name: Create Pull Request in LZ-infra
@@ -82,7 +83,7 @@ jobs:
         with:
           token: ${{ secrets.GH_TOKEN }}
           repository: preti14-m/LZ-infra
-          head: update-from-application
+          head: $BRANCH_NAME
           base: main  # Target branch in LZ-infra for the PR
           title: "Automated PR: Updates from application repo"
           body: "This PR was automatically created by a GitHub Action in the application repository."
