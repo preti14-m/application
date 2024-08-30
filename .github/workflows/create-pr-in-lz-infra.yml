@@ -1,9 +1,9 @@
-name: Create PR in LZ-infra 2
+name: Create PR in LZ-infra
 
 on:
   push:
     branches:
-      - main
+      - main  # Monitor this branch in the application repo
 
 jobs:
   create-pr:
@@ -13,7 +13,7 @@ jobs:
       - name: Checkout application repo
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Ensure full history is fetched
 
       - name: Generate Branch Name
         id: generate_branch
@@ -27,7 +27,20 @@ jobs:
           git clone https://github.com/preti14-m/LZ-infra.git lz-infra
           cd lz-infra
           git fetch origin
-          git checkout -b ${{ steps.generate_branch.outputs.branch_name }}
+          BRANCH_NAME="${{ steps.generate_branch.outputs.branch_name }}"
+          git checkout -b $BRANCH_NAME
+
+      - name: Set correct permissions for lz-infra
+        run: |
+          chmod -R 777 lz-infra
+          ls -l lz-infra/
+          touch value.txt
+          chmod 777 value.txt 
+
+      - name: Copy value.txt to LZ-infra
+        run: |
+          cp value.txt lz-infra/
+          ls -d lz-infra/
 
       - name: Commit and push changes
         env:
@@ -41,15 +54,15 @@ jobs:
           else
             git commit -m "Automated update from application repository"
             git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/preti14-m/LZ-infra.git
-            git push --set-upstream origin ${{ steps.generate_branch.outputs.branch_name }}
+            git push --set-upstream origin $BRANCH_NAME
           fi
 
       - name: Create Pull Request in LZ-infra
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GH_TOKEN }}
-          repository: preti14-m/LZ-infra
-          head: ${{ steps.generate_branch.outputs.branch_name }}
-          base: main
+          repository: preti14-m/LZ-infra  # Target repository for PR
+          head: ${{ steps.generate_branch.outputs.branch_name }}  # Source branch for PR
+          base: main  # Target branch in LZ-infra for the PR
           title: "Automated PR: Updates from application repo"
           body: "This PR was automatically created by a GitHub Action in the application repository."
