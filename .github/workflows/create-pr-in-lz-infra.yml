@@ -25,10 +25,14 @@ jobs:
           git clone https://github.com/preti14-m/LZ-infra.git lz-infra
           cd lz-infra
 
-          # Fetch remote branches and create a branch with date and time
+          # Fetch remote branches and create a branch with date
           git fetch origin
-          BRANCH_NAME="1234"
-          git checkout -b $BRANCH_NAME
+          BRANCH_NAME="update-from-application-$(date +'%Y%m%d-%H%M%S')"
+          if git rev-parse --verify origin/$BRANCH_NAME; then
+            git checkout 1234
+          else
+            git checkout -b 1234
+          fi
           
       - name: Set correct permissions for lz-infra
         run: |
@@ -71,7 +75,7 @@ jobs:
             git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/preti14-m/LZ-infra.git
             
             # Push the changes and set the upstream branch
-            git push --set-upstream origin $BRANCH_NAME
+            git push --set-upstream origin 1234
           fi
 
       - name: Create Pull Request in LZ-infra
@@ -83,4 +87,3 @@ jobs:
           base: main  # Target branch in LZ-infra for the PR
           title: "Automated PR: Updates from application repo"
           body: "This PR was automatically created by a GitHub Action in the application repository."
-          draft: false  # Set to true if you want to create a draft PR
