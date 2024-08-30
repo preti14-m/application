@@ -75,7 +75,7 @@ jobs:
             git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/preti14-m/LZ-infra.git
             
             # Push the changes and set the upstream branch
-            git push --set-upstream origin 1234
+            git push --set-upstream origin $BRANCH_NAME
           fi
 
       - name: Create Pull Request in LZ-infra
