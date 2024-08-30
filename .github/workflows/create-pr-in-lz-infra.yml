@@ -76,6 +76,7 @@ jobs:
             
             # Push the changes and set the upstream branch
             git push --set-upstream origin $BRANCH_NAME
+          fi
 
       - name: Create Pull Request in LZ-infra
         uses: peter-evans/create-pull-request@v5
