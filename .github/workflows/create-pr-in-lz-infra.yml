@@ -29,9 +29,9 @@ jobs:
           git fetch origin
           BRANCH_NAME="update-from-application-$(date +'%Y%m%d-%H%M%S')"
           if git rev-parse --verify origin/$BRANCH_NAME; then
-            git checkout $BRANCH_NAME
+            git checkout 123
           else
-            git checkout -b $BRANCH_NAME
+            git checkout -b 123
           fi
           
       - name: Set correct permissions for lz-infra
@@ -75,7 +75,7 @@ jobs:
             git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/preti14-m/LZ-infra.git
             
             # Push the changes and set the upstream branch
-            git push --set-upstream origin $BRANCH_NAME
+            git push --set-upstream origin 123
           fi
 
       - name: Create Pull Request in LZ-infra
