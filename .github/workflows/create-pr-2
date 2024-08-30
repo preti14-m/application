@@ -3,7 +3,7 @@ name: Create Pull Request
 on:
   push:
     branches:
-      - main  # The branch where changes are pushed from `application`
+      - main  
 
 jobs:
   create-pr:
