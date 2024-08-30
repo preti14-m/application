@@ -27,7 +27,8 @@ jobs:
 
           # Fetch remote branches and create a branch with date
           git fetch origin
-          BRANCH_NAME="12345"    #"update-from-application-$(date +'%Y%m%d-%H%M%S')"
+          BRANCH_NAME="123456"    #"update-from-application-$(date +'%Y%m%d-%H%M%S')"
+          echo "The branch name" $BRANCH_NAME
           if git rev-parse --verify origin/$BRANCH_NAME; then
             git checkout $BRANCH_NAME
           else
