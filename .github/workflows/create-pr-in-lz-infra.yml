@@ -27,7 +27,7 @@ jobs:
 
           # Fetch remote branches and create a branch with date and time
           git fetch origin
-          BRANCH_NAME="123-$(date +'%H%M%S')"
+          BRANCH_NAME="1234"
           git checkout -b $BRANCH_NAME
           
       - name: Set correct permissions for lz-infra
