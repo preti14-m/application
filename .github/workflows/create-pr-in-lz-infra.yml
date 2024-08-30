@@ -27,11 +27,11 @@ jobs:
 
           # Fetch remote branches and create a branch with date
           git fetch origin
-          BRANCH_NAME="update-from-application-$(date +'%Y%m%d-%H%M%S')"
+          BRANCH_NAME="12345"    #"update-from-application-$(date +'%Y%m%d-%H%M%S')"
           if git rev-parse --verify origin/$BRANCH_NAME; then
-            git checkout 1234
+            git checkout $BRANCH_NAME
           else
-            git checkout -b 1234
+            git checkout -b $BRANCH_NAME
           fi
           
       - name: Set correct permissions for lz-infra
